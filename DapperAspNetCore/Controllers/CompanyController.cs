@@ -23,5 +23,20 @@ namespace DapperAspNetCore.Controllers
                 return StatusCode(500, ex.Message);
             }    
         }
+
+        [HttpGet("{id}", Name = "ComanyById")]
+        public async Task<IActionResult> GetCompany(int id)
+        {
+            try {
+                var company = await _companyRepository.GetCompanyById(id);
+                if(company == null)
+                {
+                    return NotFound();
+                }
+                return Ok(company);
+            }catch (Exception ex) {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
