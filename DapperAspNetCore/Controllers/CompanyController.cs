@@ -1,4 +1,5 @@
-﻿using DapperAspNetCore.Repositories.Interfaces;
+﻿using DapperAspNetCore.Dtos;
+using DapperAspNetCore.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DapperAspNetCore.Controllers
@@ -24,7 +25,7 @@ namespace DapperAspNetCore.Controllers
             }    
         }
 
-        [HttpGet("{id}", Name = "ComanyById")]
+        [HttpGet("{id}", Name = "CompanyById")]
         public async Task<IActionResult> GetCompany(int id)
         {
             try {
@@ -35,6 +36,18 @@ namespace DapperAspNetCore.Controllers
                 }
                 return Ok(company);
             }catch (Exception ex) {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCompany(CreateCompanyDto company)
+        {
+            try {
+                var createdCompany = await _companyRepository.CreateCompany(company);
+                return CreatedAtRoute("CompanyById", new { id = createdCompany.Id }, createdCompany);
+            }
+            catch (Exception ex) {
                 return StatusCode(500, ex.Message);
             }
         }

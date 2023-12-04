@@ -1,4 +1,5 @@
-﻿using DapperAspNetCore.Models;
+﻿using DapperAspNetCore.Dtos;
+using DapperAspNetCore.Models;
 
 namespace DapperAspNetCore.Repositories.Interfaces
 {
@@ -6,5 +7,6 @@ namespace DapperAspNetCore.Repositories.Interfaces
     {
         public Task<IEnumerable<Company>> GetCompanies();
         public Task<Company> GetCompanyById(int id);
+        public Task<Company> CreateCompany(CreateCompanyDto company);
     }
 }
