@@ -11,7 +11,7 @@ namespace DapperAspNetCore.Controllers
         private readonly ICompanyRepository _companyRepository;
         public CompanyController(ICompanyRepository companyRepository)
         {
-                _companyRepository = companyRepository; 
+            _companyRepository = companyRepository;
         }
 
         [HttpGet]
@@ -20,9 +20,9 @@ namespace DapperAspNetCore.Controllers
             try {
                 var companies = await _companyRepository.GetCompanies();
                 return Ok(companies);
-            }catch(Exception ex) {
+            } catch (Exception ex) {
                 return StatusCode(500, ex.Message);
-            }    
+            }
         }
 
         [HttpGet("{id}", Name = "CompanyById")]
@@ -30,12 +30,12 @@ namespace DapperAspNetCore.Controllers
         {
             try {
                 var company = await _companyRepository.GetCompanyById(id);
-                if(company == null)
+                if (company == null)
                 {
                     return NotFound();
                 }
                 return Ok(company);
-            }catch (Exception ex) {
+            } catch (Exception ex) {
                 return StatusCode(500, ex.Message);
             }
         }
@@ -48,6 +48,42 @@ namespace DapperAspNetCore.Controllers
                 return CreatedAtRoute("CompanyById", new { id = createdCompany.Id }, createdCompany);
             }
             catch (Exception ex) {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCompany(int id, UpdateCompanyDto company)
+        {
+            try
+            {
+                var dbCompany = await _companyRepository.GetCompanyById(id);
+                if (dbCompany == null)
+                {
+                    return NotFound();
+                }
+
+                await _companyRepository.UpdateCompany(id, company);
+                return NoContent();
+            }
+            catch (Exception ex) {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCompany(int id)
+        {
+            try
+            {
+                var dbCompany = await _companyRepository.GetCompanyById(id);
+                if(dbCompany == null)
+                {
+                    return NotFound();
+                }
+                await _companyRepository.DeleteCompany(id);
+                return NoContent();
+            }catch(Exception ex) {
                 return StatusCode(500, ex.Message);
             }
         }

@@ -63,5 +63,30 @@ namespace DapperAspNetCore.Repositories
                 return company;
             } 
         }
+
+        public async Task UpdateCompany(int id, UpdateCompanyDto company)
+        {
+            var query = "UPDATE Companies SET Name=@Name, Address=@Address, Country=@Country WHERE Id = @Id";
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", id, DbType.Int32);
+            parameters.Add("Name", company.Name, DbType.String);
+            parameters.Add("Address", company.Address, DbType.String);
+            parameters.Add("Country", company.Country, DbType.String);
+
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
+            }
+
+        }
+
+        public async Task DeleteCompany(int id) 
+        {
+            var query = "DELETE FROM Companies WHERE ID=@ID";
+            using(var connection = _context.CreateConnection()) 
+            {
+                await connection.ExecuteAsync(query, new { id});
+            }    
+        }
     }
 }
