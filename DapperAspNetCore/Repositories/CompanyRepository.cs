@@ -88,5 +88,18 @@ namespace DapperAspNetCore.Repositories
                 await connection.ExecuteAsync(query, new { id});
             }    
         }
+
+        public async Task<Company> GetCompanyByEmployeeId(int id) 
+        {
+            var procedureName = "ShowCompanyForProvidedEmployeeId";
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", id, DbType.Int32, ParameterDirection.Input);
+
+            using(var connection = _context.CreateConnection())
+            {
+                var company = await connection.QueryFirstOrDefaultAsync<Company>(procedureName, parameters, commandType: CommandType.StoredProcedure);
+                return company;
+            }
+        }
     }
 }
